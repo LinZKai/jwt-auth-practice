@@ -1,4 +1,4 @@
-# JWT Auth Practice Backend (TypeScript + Express + EJS + Prisma + Postgres)
+# JWT Auth Practice Backend
 
 A practice project for building a real-world-ish authentication flow:
 - Register / Login with **bcrypt**
