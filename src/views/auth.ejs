@@ -1,0 +1,133 @@
+<%- include("partials/head", { title, env }) %>
+
+<div class="grid">
+  <div class="card">
+    <div class="hd">
+      <p class="title">Auth Playground</p>
+    </div>
+    <div class="bd">
+      <div class="field">
+        <label>Email</label>
+        <input id="email" placeholder="demo@example.com" value="demo@example.com" />
+      </div>
+      <div class="field">
+        <label>Password</label>
+        <input id="password" type="password" placeholder="at least 8 chars" value="password123" />
+      </div>
+
+      <div class="row">
+        <button class="btn primary" onclick="register()">Register</button>
+        <button class="btn success" onclick="login()">Login</button>
+        <button class="btn" onclick="refresh()">Refresh</button>
+        <button class="btn danger" onclick="logout()">Logout</button>
+        <button class="btn" onclick="callMe()">Call /api/me</button>
+      </div>
+
+      <div class="sep"></div>
+
+      <div class="field">
+        <textarea id="accessToken" rows="4" placeholder="(after login)" readonly></textarea>
+      </div>
+
+      <div class="field">
+        <label>Response</label>
+        <textarea id="output" rows="9" ></textarea>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="hd">
+      <p class="title">Endpoints</p>
+    </div>
+    <div class="bd">
+      <div class="codebox">
+        GET  /health<br/>
+        GET  /auth<br/><br/>
+        POST /api/auth/register<br/>
+        POST /api/auth/login<br/>
+        POST /api/auth/refresh<br/>
+        POST /api/auth/logout<br/>
+      </div>
+      <div class="sep"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+  let accessToken = "";
+
+  function $(id){ return document.getElementById(id); }
+
+  function setOut(obj){
+    $("output").textContent = JSON.stringify(obj, null, 2);
+    $("accessToken").value = accessToken;
+  }
+
+  function body(){
+    return {
+      email: $("email").value,
+      password: $("password").value
+    };
+  }
+
+  async function requestJSON(path, options = {}) {
+    const res = await fetch(path, options);
+    const data = await res.json().catch(() => ({}));
+    return { res, data };
+  }
+
+  async function callAuth(path){
+    const { res, data } = await requestJSON(path, {
+      method: "POST",
+      headers: { "Content-Type":"application/json" },
+      credentials: "include", // 讓 refresh cookie 能進出
+      body: JSON.stringify(body())
+    });
+
+    // login / refresh 成功時可能會給 accessToken
+    if (data && data.accessToken) accessToken = data.accessToken;
+
+    setOut({ status: res.status, data });
+    return { res, data };
+  }
+
+  async function callProtectedGET(path){
+    // 1) 先用目前的 access token 打一次
+    let { res, data } = await requestJSON(path, {
+      method: "GET",
+      headers: accessToken ? { "Authorization": "Bearer " + accessToken } : {},
+      credentials: "include"
+    });
+
+    // 2) 如果 access token 過期/無效 → 嘗試 refresh 一次 → 重打一次
+    if (res.status === 401) {
+      const refreshed = await callAuth("/api/auth/refresh"); // 這會更新 accessToken（如果成功）
+      if (refreshed.res.status === 200 && accessToken) {
+        ({ res, data } = await requestJSON(path, {
+          method: "GET",
+          headers: { "Authorization": "Bearer " + accessToken },
+          credentials: "include"
+        }));
+      }
+    }
+
+    setOut({ status: res.status, data });
+    return { res, data };
+  }
+
+  // --- Buttons ---
+  function register(){ return callAuth("/api/auth/register"); }
+  function login(){ return callAuth("/api/auth/login"); }
+  function refresh(){ return callAuth("/api/auth/refresh"); }
+  function logout(){
+    accessToken = "";
+    return callAuth("/api/auth/logout");
+  }
+  function callMe(){ return callProtectedGET("/api/me"); }
+
+  // 初始顯示
+  setOut({ hint: "Try Register/Login then Call /api/me" });
+</script>
+
+<%- include("partials/foot") %>

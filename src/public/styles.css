@@ -1,0 +1,188 @@
+:root{
+  --bg: #0b1220;
+  --card: rgba(255,255,255,.06);
+  --card2: rgba(255,255,255,.10);
+  --text: rgba(255,255,255,.92);
+  --muted: rgba(255,255,255,.68);
+  --line: rgba(255,255,255,.12);
+  --accent: #7c3aed; /* 紫 */
+  --accent2: #22c55e; /* 綠 */
+  --danger: #ef4444;
+  --shadow: 0 18px 60px rgba(0,0,0,.45);
+}
+
+*{ box-sizing: border-box; }
+html,body{ height:100%; }
+body{
+  margin:0;
+  font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, "Noto Sans TC", "PingFang TC", Arial, "Apple Color Emoji","Segoe UI Emoji";
+  color: var(--text);
+  background:
+    radial-gradient(900px 500px at 20% 10%, rgba(124,58,237,.35), transparent 60%),
+    radial-gradient(800px 500px at 90% 20%, rgba(34,197,94,.18), transparent 60%),
+    radial-gradient(900px 700px at 40% 90%, rgba(59,130,246,.18), transparent 60%),
+    var(--bg);
+}
+
+a{ color: inherit; text-decoration: none; }
+.container{
+  width: min(1040px, 92vw);
+  margin: 40px auto;
+}
+
+.nav{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding: 14px 18px;
+  border: 1px solid var(--line);
+  background: rgba(255,255,255,.03);
+  border-radius: 16px;
+  backdrop-filter: blur(10px);
+}
+.brand{
+  display:flex;
+  gap:12px;
+  align-items:center;
+}
+.logo{
+  width: 38px; height: 38px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, rgba(124,58,237,.9), rgba(34,197,94,.65));
+  box-shadow: var(--shadow);
+}
+.brand h1{
+  margin:0;
+  font-size: 16px;
+  letter-spacing: .2px;
+}
+.brand p{
+  margin:0;
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.grid{
+  display:grid;
+  grid-template-columns: 1.1fr .9fr;
+  gap: 18px;
+  margin-top: 18px;
+}
+@media (max-width: 900px){
+  .grid{ grid-template-columns: 1fr; }
+}
+
+.card{
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  background: var(--card);
+  backdrop-filter: blur(10px);
+  box-shadow: var(--shadow);
+}
+.card .hd{
+  padding: 16px 18px;
+  border-bottom: 1px solid var(--line);
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+}
+.card .hd .title{
+  font-size: 14px;
+  margin:0;
+}
+.badge{
+  font-size: 12px;
+  color: var(--muted);
+  border: 1px solid var(--line);
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: rgba(255,255,255,.03);
+}
+.card .bd{ padding: 18px; }
+
+.row{
+  display:flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.field{
+  width: 100%;
+  margin-bottom: 12px;
+}
+label{
+  display:block;
+  font-size: 12px;
+  color: var(--muted);
+  margin-bottom: 6px;
+}
+input, textarea{
+  width: 100%;
+  padding: 12px 12px;
+  border-radius: 14px;
+  border: 1px solid rgba(255,255,255,.14);
+  background: rgba(0,0,0,.18);
+  color: var(--text);
+  outline: none;
+}
+input:focus, textarea:focus{
+  border-color: rgba(124,58,237,.7);
+  box-shadow: 0 0 0 4px rgba(124,58,237,.18);
+}
+.help{
+  font-size: 12px;
+  color: var(--muted);
+  margin-top: 6px;
+  line-height: 1.5;
+}
+
+.btn{
+  padding: 11px 14px;
+  border-radius: 14px;
+  border: 1px solid rgba(255,255,255,.14);
+  background: rgba(255,255,255,.06);
+  color: var(--text);
+  cursor:pointer;
+  transition: transform .06s ease, background .2s ease, border-color .2s ease;
+  user-select:none;
+}
+.btn:hover{ background: rgba(255,255,255,.10); }
+.btn:active{ transform: translateY(1px); }
+
+.btn.primary{
+  border-color: rgba(124,58,237,.55);
+  background: rgba(124,58,237,.20);
+}
+.btn.primary:hover{ background: rgba(124,58,237,.28); }
+
+.btn.success{
+  border-color: rgba(34,197,94,.55);
+  background: rgba(34,197,94,.18);
+}
+.btn.success:hover{ background: rgba(34,197,94,.26); }
+
+.btn.danger{
+  border-color: rgba(239,68,68,.55);
+  background: rgba(239,68,68,.16);
+}
+.btn.danger:hover{ background: rgba(239,68,68,.22); }
+
+.sep{
+  height: 1px;
+  background: var(--line);
+  margin: 14px 0;
+}
+
+.codebox{
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  font-size: 12px;
+  background: rgba(0,0,0,.28);
+  border: 1px solid rgba(255,255,255,.14);
+  border-radius: 14px;
+  padding: 12px;
+  overflow:auto;
+  color: rgba(255,255,255,.86);
+}
+.small{
+  font-size: 12px;
+  color: var(--muted);
+}
