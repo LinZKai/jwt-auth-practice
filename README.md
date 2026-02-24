@@ -45,9 +45,6 @@ npx prisma migrate dev
 npm run dev
 ```
 
-## Test
-- Open http://localhost:3000/auth
-
 ## API Endpoints
 - Health
   - GET /health
@@ -58,3 +55,32 @@ npm run dev
   - POST /api/auth/logout
 - Protected
   - GET /api/me (Authorization: Bearer <accessToken>)
+
+Open http://localhost:3000/auth to test API
+
+## Testing (Jest)
+This project uses **Jest + Supertest** for integration tests.
+
+### Test Environment
+Tests load environment variables from `.env.test`, so they can use a separate test database.
+
+### Prepare Test DB (one-time)
+Create a test database (if not created yet):
+```bash
+docker exec -it jwt_practice_pg psql -U app -d postgres
+# then in psql:
+CREATE DATABASE jwt_practice_test;
+\q
+```
+
+Run migrations against the test database:
+```bash
+# PowerShell example
+$env:DATABASE_URL="postgresql://app:apppass@localhost:5432/jwt_practice_test?schema=public"
+npx prisma migrate dev
+```
+
+Run Tests
+```bash
+npm test
+```
